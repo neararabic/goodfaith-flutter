@@ -3,6 +3,7 @@ import 'package:good_faith/constants.dart';
 import 'package:good_faith/providers/connect_wallet_provider.dart';
 import 'package:good_faith/screens/goodfaith_home_page.dart';
 import 'package:good_faith/widgets/centered_progress_indicator.dart';
+import 'package:good_faith/widgets/centered_progress_indicator_with_app_bar.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class _ConnectWalletScreenState extends State<ConnectWalletScreen>
     switch (provider.state) {
       case WalletConnectionState.initial:
         provider.checkLoggedInUser();
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loggedIn:
         Future.delayed(const Duration(seconds: 1)).then((_) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -36,14 +37,14 @@ class _ConnectWalletScreenState extends State<ConnectWalletScreen>
                     userAccountId: provider.userAccountId!,
                   )));
         });
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.resetingState:
         provider.resetState();
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loggedOut:
         return buildLoginCard();
       case WalletConnectionState.validatingLogin:
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loginFailed:
         return buildLoginFailed();
     }

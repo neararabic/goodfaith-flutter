@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:good_faith/constants.dart';
+import 'package:good_faith/models/request.dart';
 import 'package:good_faith/providers/borrow_request_page_provider.dart';
+import 'package:good_faith/widgets/centered_progress_indicator.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,15 +24,194 @@ class BorrowRequestPage extends StatefulWidget {
 class _BorrowRequestPageState extends State<BorrowRequestPage>
     with WidgetsBindingObserver {
   late BorrowRequestPageProvider provider;
+  final borrowAmountController = TextEditingController();
+  final descController = TextEditingController();
+  final accountIdController = TextEditingController();
+  DateTime now = DateTime.now();
+  late DateTime paybackDate = DateTime(now.year, now.month, now.day + 1);
+  bool isPersonal = false;
+  bool invalidAccountId = false;
+  bool isCreateButtonDisabled = true;
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<BorrowRequestPageProvider>(context);
-    return buildCoinflipPage();
+
+    switch (provider.state) {
+      case BorrowRequestPageState.init:
+        return buildCoinflipPage();
+      case BorrowRequestPageState.loading:
+        return const CenteredCircularProgressIndicator();
+      case BorrowRequestPageState.loaded:
+        showTransactionMessage(context);
+        return buildCoinflipPage();
+      default:
+        return buildCoinflipPage();
+    }
   }
 
   buildCoinflipPage() {
-    return const Text("Borrow Request Form");
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(children: [
+              const Text(
+                "Borrow Request",
+                style: Constants.HEADING_1,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: borrowAmountController,
+                      onChanged: (value) {
+                        changeCreateButtonState();
+                      },
+                      decoration: const InputDecoration(
+                          labelText: "Borrow Amount", alignLabelWithHint: true),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,5}'))
+                      ],
+                    ),
+                  ),
+                  const Text(
+                    "  Ⓝ",
+                    style: Constants.HEADING_1,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                controller: descController,
+                onChanged: (value) {
+                  changeCreateButtonState();
+                },
+                decoration: const InputDecoration(
+                    labelText: "Description", alignLabelWithHint: true),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => selectDate(context),
+                    child: const Text('Payback Date'),
+                  ),
+                  Text("${paybackDate.toLocal()}".split(' ')[0]),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CheckboxListTile(
+                title: const Text(
+                  "Personal",
+                ),
+                visualDensity: const VisualDensity(
+                    horizontal: VisualDensity.minimumDensity,
+                    vertical: VisualDensity.minimumDensity),
+                value: isPersonal,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      isPersonal = value;
+                    });
+                    changeCreateButtonState();
+                  }
+                },
+              ),
+              isPersonal
+                  ? TextField(
+                      controller: accountIdController,
+                      onChanged: (value) {
+                        changeCreateButtonState();
+                      },
+                      decoration: const InputDecoration(
+                          labelText: "Account ID", alignLabelWithHint: true),
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: isCreateButtonDisabled
+                        ? ElevatedButton(
+                            onPressed: null,
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.grey),
+                            child: const Text("Create Request"))
+                        : ElevatedButton(
+                            onPressed: () {
+                              Request request = Request(
+                                  amount:
+                                      nearToYocto(borrowAmountController.text),
+                                  desc: descController.text,
+                                  borrower: widget.userAccountId,
+                                  lender: accountIdController.text,
+                                  paybackTimestamp:
+                                      paybackDate.microsecondsSinceEpoch *
+                                          1000);
+                              provider.createRequest(widget.keyPair,
+                                  widget.userAccountId, request);
+                            },
+                            child: const Text("Create Request")),
+                  )
+                ],
+              )
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  checkNearAccountId(accountId) {
+    RegExp regExp = RegExp(
+      r"^\w+(?:\.\w+)*\.testnet$",
+      caseSensitive: true,
+      multiLine: false,
+    );
+    if (regExp.allMatches(accountId).isNotEmpty) {
+      invalidAccountId = false;
+      isCreateButtonDisabled = false;
+    } else {
+      invalidAccountId = true;
+      isCreateButtonDisabled = true;
+    }
+  }
+
+  BigInt nearToYocto(String amount) {
+    num nanoNear = double.parse(borrowAmountController.text) * pow(10, 9);
+    return BigInt.from(nanoNear) * BigInt.parse('1000000000000000');
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: paybackDate,
+        firstDate: DateTime(now.year, now.month, now.day + 1),
+        lastDate: DateTime(now.year + 2, now.month, now.day));
+    if (picked != null && picked != paybackDate) {
+      setState(() {
+        paybackDate = picked;
+      });
+    }
   }
 
   showTransactionMessage(BuildContext context) async {
@@ -46,6 +231,28 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
       await Future.delayed(const Duration(seconds: 1), (() {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }));
+      provider.transactionMessage = '';
     }
+  }
+
+  void changeCreateButtonState() {
+    setState(() {
+      if (isPersonal) {
+        if (borrowAmountController.text.isNotEmpty &&
+            descController.text.isNotEmpty &&
+            accountIdController.text.isNotEmpty) {
+          isCreateButtonDisabled = false;
+        } else {
+          isCreateButtonDisabled = true;
+        }
+      } else {
+        if (borrowAmountController.text.isNotEmpty &&
+            descController.text.isNotEmpty) {
+          isCreateButtonDisabled = false;
+        } else {
+          isCreateButtonDisabled = true;
+        }
+      }
+    });
   }
 }

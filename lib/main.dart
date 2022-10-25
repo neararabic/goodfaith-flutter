@@ -5,7 +5,7 @@ import 'package:good_faith/providers/connect_wallet_provider.dart';
 import 'package:good_faith/providers/lend_list_page_provider.dart';
 import 'package:good_faith/screens/connect_wallet.dart';
 import 'package:good_faith/screens/goodfaith_home_page.dart';
-import 'package:good_faith/widgets/centered_progress_indicator.dart';
+import 'package:good_faith/widgets/centered_progress_indicator_with_app_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -48,7 +48,7 @@ class AppContainer extends StatelessWidget {
     switch (provider.state) {
       case WalletConnectionState.initial:
         provider.checkLoggedInUser();
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loggedIn:
         return GoodFaithPage(
             keyPair: provider.keyPair!, userAccountId: provider.userAccountId!);
@@ -56,10 +56,10 @@ class AppContainer extends StatelessWidget {
       case WalletConnectionState.loginFailed:
         return const ConnectWalletScreen();
       case WalletConnectionState.validatingLogin:
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.resetingState:
         provider.resetState();
-        return const CenteredCircularProgressIndicator();
+        return const CenteredCircularProgressIndicatorWithAppBar();
     }
   }
 }

@@ -14,7 +14,7 @@ class NEARApi {
     return response;
   }
 
-  callFunction(String userAccountId, KeyPair keyPair, double deposit, String method, String args, int gasFees) async {
+  callFunction(String userAccountId, KeyPair keyPair, double deposit, String method, String args) async {
     Account connectedAccount = Account(
         accountId: userAccountId,
         keyPair: keyPair,
@@ -33,7 +33,7 @@ class NEARApi {
           Constants.WEB_FAILURE_URL,
           Constants.WALLET_SIGN_URL);
     } else {
-      response = await contract.callFunction(method, args, 0.0, gasFees);
+      response = await contract.callFunction(method, args, 0.0);
     }
     return response;
   }

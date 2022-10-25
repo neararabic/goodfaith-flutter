@@ -365,7 +365,7 @@ packages:
       name: near_api_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.12-alpha"
+    version: "0.0.13-alpha"
   nested:
     dependency: transitive
     description:
@@ -429,6 +429,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
+  primitive:
+    dependency: "direct main"
+    description:
+      name: primitive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   process:
     dependency: transitive
     description:

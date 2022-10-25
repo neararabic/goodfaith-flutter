@@ -3,19 +3,23 @@ class Request {
   String borrower = '';
   String lender = '';
   String desc = '';
-  DateTime paybackDate = DateTime.now();
-  String amount = '';
+  num paybackTimestamp = 0;
+  BigInt amount = BigInt.zero;
 
-  Request();
+  Request(
+      {required this.borrower,
+      required this.lender,
+      required this.desc,
+      required this.paybackTimestamp,
+      required this.amount});
 
   Request.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     borrower = json['borrower'];
     lender = json['lender'];
     desc = json['desc'];
-    paybackDate =
-        DateTime.fromMicrosecondsSinceEpoch(json['paybackTimestamp'] / 1000);
-    amount = yoctoToNear(json['amount']);
+    paybackTimestamp = json['paybackTimestamp'];
+    amount = json['amount'];
   }
 
   String yoctoToNear(String yocto) {

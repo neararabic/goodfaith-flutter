@@ -11,6 +11,7 @@ export class Contract {
   @mutateState()
   postBorrowRequest(request: Request): Request {
     assert(request.paybackTimestamp > context.blockTimestamp, 'Payback time is in the past!');
+    request.borrower = context.predecessor;
     request.id = context.predecessor + '_' + context.blockTimestamp.toString();
     this.requests.set(request.id, request);
     this.unfulfilledRequestIds.add(request.id);
