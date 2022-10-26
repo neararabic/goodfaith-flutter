@@ -58,90 +58,102 @@ class _LendListPageState extends State<LendListPage>
   }
 
   buildLendListPage() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
+    return RefreshIndicator(
+      onRefresh: () async {
+        provider.updateState(LendListState.loading);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(20),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            const Text(
-              "Borrow Requests",
-              style: Constants.HEADING_1,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ToggleButtons(
-              direction: Axis.horizontal,
-              onPressed: (int index) {
-                setState(() {
-                  // The button that is tapped is set to true, and the others to false.
-                  for (int i = 0; i < selectedFilters.length; i++) {
-                    selectedFilters[i] = i == index;
-                  }
-                });
-              },
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              constraints: const BoxConstraints(
-                minHeight: 40.0,
-                minWidth: 80.0,
-              ),
-              isSelected: selectedFilters,
-              children: filters,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: provider.requests.length,
-                itemBuilder: (context, index) {
-                  Request request = provider.requests[index];
-                  String requestAmountInNear =
-                      yoctoToNear(request.amount.toString());
-                  if ((((request.lender == '' && selectedFilters[0]) ||
-                          request.lender == widget.userAccountId) &&
-                      request.borrower != widget.userAccountId)) {
-                    return ListTile(
-                      contentPadding: const EdgeInsets.all(0),
-                      minVerticalPadding: 15,
-                      horizontalTitleGap: 0,
-                      minLeadingWidth: 0,
-                      leading: request.lender == widget.userAccountId
-                          ? const VerticalDivider(
-                              color: Colors.deepOrange,
-                              thickness: 3,
-                            )
-                          : const SizedBox(
-                              width: 15,
-                            ),
-                      title:
-                          Text('${request.borrower} - $requestAmountInNearⓃ'),
-                      subtitle: Text(
-                          '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
-                      trailing: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.deepOrange),
-                        onPressed: () {
-                          requestToBeConfiremed = request;
-                          provider.lend(widget.keyPair, widget.userAccountId,
-                              request, double.parse(requestAmountInNear));
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Lend'),
-                        ),
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Borrow Requests",
+                      style: Constants.HEADING_1,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ToggleButtons(
+                      direction: Axis.horizontal,
+                      onPressed: (int index) {
+                        setState(() {
+                          // The button that is tapped is set to true, and the others to false.
+                          for (int i = 0; i < selectedFilters.length; i++) {
+                            selectedFilters[i] = i == index;
+                          }
+                        });
+                      },
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      constraints: const BoxConstraints(
+                        minHeight: 40.0,
+                        minWidth: 80.0,
                       ),
-                      isThreeLine: true,
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            )
-          ]),
+                      isSelected: selectedFilters,
+                      children: filters,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: provider.requests.length,
+                      itemBuilder: (context, index) {
+                        Request request = provider.requests[index];
+                        String requestAmountInNear =
+                            yoctoToNear(request.amount.toString());
+                        if ((((request.lender == '' && selectedFilters[0]) ||
+                                request.lender == widget.userAccountId) &&
+                            request.borrower != widget.userAccountId)) {
+                          return ListTile(
+                            contentPadding: const EdgeInsets.all(0),
+                            minVerticalPadding: 15,
+                            horizontalTitleGap: 0,
+                            minLeadingWidth: 0,
+                            leading: request.lender == widget.userAccountId
+                                ? const VerticalDivider(
+                                    color: Colors.deepOrange,
+                                    thickness: 3,
+                                  )
+                                : const SizedBox(
+                                    width: 15,
+                                  ),
+                            title: Text(
+                                '${request.borrower} - $requestAmountInNearⓃ'),
+                            subtitle: Text(
+                                '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
+                            trailing: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.deepOrange),
+                              onPressed: () {
+                                requestToBeConfiremed = request;
+                                provider.lend(
+                                    widget.keyPair,
+                                    widget.userAccountId,
+                                    request,
+                                    double.parse(requestAmountInNear));
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Lend'),
+                              ),
+                            ),
+                            isThreeLine: true,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
+                  ]),
+            ),
+          ),
         ),
       ),
     );
