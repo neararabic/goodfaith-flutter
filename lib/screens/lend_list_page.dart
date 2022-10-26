@@ -23,6 +23,11 @@ class _LendListPageState extends State<LendListPage>
   late BuildContext buildContext;
   late LendListProvider provider;
   Request? requestToBeConfiremed;
+  final List<bool> selectedFilters = <bool>[true, false];
+  final List<Widget> filters = const [
+    Text('All'),
+    Text('Personal'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +72,27 @@ class _LendListPageState extends State<LendListPage>
             const SizedBox(
               height: 20,
             ),
+            ToggleButtons(
+              direction: Axis.horizontal,
+              onPressed: (int index) {
+                setState(() {
+                  // The button that is tapped is set to true, and the others to false.
+                  for (int i = 0; i < selectedFilters.length; i++) {
+                    selectedFilters[i] = i == index;
+                  }
+                });
+              },
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              constraints: const BoxConstraints(
+                minHeight: 40.0,
+                minWidth: 80.0,
+              ),
+              isSelected: selectedFilters,
+              children: filters,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: provider.requests.length,
@@ -74,9 +100,9 @@ class _LendListPageState extends State<LendListPage>
                   Request request = provider.requests[index];
                   String requestAmountInNear =
                       yoctoToNear(request.amount.toString());
-                  if ((request.lender == '' ||
+                  if ((((request.lender == '' && selectedFilters[0]) ||
                           request.lender == widget.userAccountId) &&
-                      request.borrower != widget.userAccountId) {
+                      request.borrower != widget.userAccountId)) {
                     return ListTile(
                       contentPadding: const EdgeInsets.all(0),
                       minVerticalPadding: 15,
