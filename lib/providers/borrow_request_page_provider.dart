@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_faith/constants.dart';
 import 'package:good_faith/models/request.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../near/near_api_calls.dart';
@@ -15,7 +16,7 @@ class BorrowRequestPageProvider with ChangeNotifier {
     String method = 'postBorrowRequest';
     double deposit = 0.0;
     String args =
-        '{"request":{"id":"", "borrower":"", "lender":"", "desc":"${request.desc}", "paybackTimestamp":"${request.paybackTimestamp.toString()}", "amount":"${request.amount.toString()}"}}';
+        '{"request":{"id":"", "borrower":"", "lender":"${request.lender}", "desc":"${request.desc}", "paybackTimestamp":"${request.paybackTimestamp.toString()}", "amount":"${request.amount.toString()}"}}';
     dynamic response;
     try {
       response = await NEARApi()
@@ -30,7 +31,7 @@ class BorrowRequestPageProvider with ChangeNotifier {
         transactionMessage = response['result']['status']["Failure"]
             ["ActionError"]["kind"]["FunctionCallError"]["ExecutionError"];
       } else if (response['result']['status'].containsKey("SuccessValue")) {
-        transactionMessage = "Request Created Successfully";
+        transactionMessage = Constants.REQUEST_CREATED_MSG;
       }
     }
     updateState(BorrowRequestPageState.loaded);

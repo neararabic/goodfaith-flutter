@@ -18,6 +18,8 @@ class Constants {
   static const APP_TITLE = 'Good faith';
   static const DEFAULT_GAS_FEES = 30000000000000;
 
+  static const REQUEST_CREATED_MSG = "Request created successfully!";
+
   static const HEADING_1 = TextStyle(
       fontSize: 24.0,
       fontWeight: FontWeight.bold,

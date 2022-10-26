@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_faith/providers/lend_list_page_provider.dart';
+import 'package:good_faith/widgets/centered_progress_indicator.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -22,10 +23,15 @@ class _LendListPageState extends State<LendListPage>
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<LendListProvider>(context);
-    return buildCoinflipPage();
+    switch (provider.state) {
+      case LendListState.loadingList:
+        return const CenteredCircularProgressIndicator();
+      case LendListState.loaded:
+        return buildLendListPage();
+    }
   }
 
-  buildCoinflipPage() {
+  buildLendListPage() {
     return const Text("Lend List");
   }
 

@@ -163,7 +163,9 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                                       nearToYocto(borrowAmountController.text),
                                   desc: descController.text,
                                   borrower: widget.userAccountId,
-                                  lender: accountIdController.text,
+                                  lender: isPersonal
+                                      ? accountIdController.text
+                                      : '',
                                   paybackTimestamp:
                                       paybackDate.microsecondsSinceEpoch *
                                           1000);
@@ -231,8 +233,22 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
       await Future.delayed(const Duration(seconds: 1), (() {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }));
+      resetState();
       provider.transactionMessage = '';
     }
+  }
+
+  resetState() {
+    setState(() {
+      if (provider.transactionMessage == Constants.REQUEST_CREATED_MSG) {
+        borrowAmountController.text = '';
+        descController.text = '';
+        accountIdController.text = '';
+        isPersonal = false;
+        paybackDate = DateTime(now.year, now.month, now.day + 1);
+      }
+      provider.transactionMessage = '';
+    });
   }
 
   void changeCreateButtonState() {

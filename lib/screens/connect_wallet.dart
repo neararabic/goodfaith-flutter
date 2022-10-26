@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:good_faith/constants.dart';
 import 'package:good_faith/providers/connect_wallet_provider.dart';
 import 'package:good_faith/screens/goodfaith_home_page.dart';
-import 'package:good_faith/widgets/centered_progress_indicator.dart';
 import 'package:good_faith/widgets/centered_progress_indicator_with_app_bar.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
