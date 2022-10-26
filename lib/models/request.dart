@@ -3,7 +3,7 @@ class Request {
   String borrower = '';
   String lender = '';
   String desc = '';
-  num paybackTimestamp = 0;
+  BigInt paybackTimestamp = BigInt.zero;
   BigInt amount = BigInt.zero;
 
   Request(
@@ -18,17 +18,7 @@ class Request {
     borrower = json['borrower'];
     lender = json['lender'];
     desc = json['desc'];
-    paybackTimestamp = json['paybackTimestamp'];
-    amount = json['amount'];
-  }
-
-  String yoctoToNear(String yocto) {
-    if (yocto == '0') {
-      return yocto;
-    } else {
-      double parsed = double.parse(yocto);
-      double oneNear = 1000000000000000000000000.0;
-      return (parsed / oneNear).toStringAsFixed(3);
-    }
+    paybackTimestamp = BigInt.parse(json['paybackTimestamp']);
+    amount = BigInt.parse(json['amount']);
   }
 }

@@ -166,9 +166,10 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                                   lender: isPersonal
                                       ? accountIdController.text
                                       : '',
-                                  paybackTimestamp:
-                                      paybackDate.microsecondsSinceEpoch *
-                                          1000);
+                                  paybackTimestamp: BigInt.parse(paybackDate
+                                          .microsecondsSinceEpoch
+                                          .toString()) *
+                                      BigInt.from(1000));
                               provider.createRequest(widget.keyPair,
                                   widget.userAccountId, request);
                             },

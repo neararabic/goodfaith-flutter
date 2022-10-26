@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_faith/local_storage.dart';
+import 'package:good_faith/models/request.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../near/near_api_calls.dart';
 
@@ -9,41 +10,23 @@ enum LendListState { loadingList, loaded }
 class LendListProvider with ChangeNotifier {
   LendListState state = LendListState.loadingList;
   String transactionMessage = "";
+  List<Request> requests = [];
 
-  Future<void> loadPageData(
-      {required KeyPair keyPair,
-      required String userAccountId}) async {
-    // Delay 1 second to make sure transactions finalized before getting updated data
-    await Future.delayed(const Duration(seconds: 1));
-
-    // // Get player data
-    // String method = 'viewPlayer';
-    // String args = '{"accountId":"$userAccountId"}';
-    // if (!saveTransactionMessage) {
-    //   transactionMessage = "";
-    // }
-    // try {
-    //   var response = await NEARApi()
-    //       .callViewFunction(userAccountId, keyPair, method, args);
-    //   var decodedResult = utf8.decode(response['result']['result'].cast<int>());
-    // } catch (e) {
-    //   transactionMessage = "RPC Error! Please try again later.";
-    // }
-
-    // // Get leaderboad data
-    // method = 'viewLeaderboard';
-    // args = '{}';
-    // try {
-    //   var response = await NEARApi()
-    //       .callViewFunction(userAccountId, keyPair, method, args);
-    //   var decodedResult = utf8.decode(response['result']['result'].cast<int>());
-    //   leaderboard = (json.decode(decodedResult) as List)
-    //       .map((e) => Player.fromJson(e))
-    //       .toList();
-    // } catch (e) {
-    //   transactionMessage = "RPC Error! Please try again later.";
-    // }
-
+  Future<void> loadListData(
+      {required KeyPair keyPair, required String userAccountId}) async {
+    String method = 'getUnfulfilledRequests';
+    String args = '{}';
+    dynamic response;
+    try {
+      response = await NEARApi()
+          .callViewFunction(userAccountId, keyPair, method, args);
+      var result = utf8.decode(response['result']['result'].cast<int>());
+      requests = (json.decode(result) as List)
+          .map((e) => Request.fromJson(e))
+          .toList();
+    } catch (e) {
+      transactionMessage = " RPC Error! Please try again later. ";
+    }
     updateState(LendListState.loaded);
   }
 
@@ -54,8 +37,7 @@ class LendListProvider with ChangeNotifier {
   }
 
   //singleton
-  static final LendListProvider _singleton =
-      LendListProvider._internal();
+  static final LendListProvider _singleton = LendListProvider._internal();
 
   factory LendListProvider() {
     return _singleton;
