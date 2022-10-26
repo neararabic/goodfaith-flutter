@@ -56,9 +56,9 @@ class _LendListPageState extends State<LendListPage>
                 itemCount: provider.requests.length,
                 itemBuilder: (context, index) {
                   Request request = provider.requests[index];
-                  if (request.lender == '' ||
-                      request.lender == widget.userAccountId &&
-                          request.borrower != widget.userAccountId) {
+                  if ((request.lender == '' ||
+                          request.lender == widget.userAccountId) &&
+                      request.borrower != widget.userAccountId) {
                     return ListTile(
                       contentPadding: const EdgeInsets.all(0),
                       horizontalTitleGap: 0,

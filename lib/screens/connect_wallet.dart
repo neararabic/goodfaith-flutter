@@ -41,76 +41,88 @@ class _ConnectWalletScreenState extends State<ConnectWalletScreen>
         provider.resetState();
         return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loggedOut:
-        return buildLoginCard();
+        return buildLoginPage();
       case WalletConnectionState.validatingLogin:
         return const CenteredCircularProgressIndicatorWithAppBar();
       case WalletConnectionState.loginFailed:
-        return buildLoginFailed();
+        return buildLoginFailedPage();
     }
   }
 
-  buildLoginCard() {
+  buildLoginPage() {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Good Faith"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      accountId = value;
-                      checkNearAccountId(accountId);
-                    });
-                  },
-                  decoration: const InputDecoration(
-                      labelText: "NEAR account to connect with"),
-                ),
-              ),
-              invalidAccountId
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        "Invalid near account ID (e.g. nearflutter.testnet)",
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            backgroundColor: Colors.amberAccent),
-                      ),
-                    )
-                  : Container(),
-              isConnectWalletDisabled
-                  ? ElevatedButton(
-                      onPressed: null,
-                      style: ElevatedButton.styleFrom(primary: Colors.grey),
-                      child: const Text("Connect Wallet"))
-                  : ElevatedButton(
-                      onPressed: () {
-                        connectWallet(accountId);
-                      },
-                      child: const Text("Connect Wallet"))
-            ],
-          ),
-        ),
+        child: buildlLoginCard(),
       ),
     );
   }
 
-  buildLoginFailed() {
-    return Column(
-      children: [
-        buildLoginCard(),
-        const Text(
-          "Wallet connection failed, please try again",
-          style: TextStyle(
-              color: Colors.redAccent, backgroundColor: Colors.amberAccent),
-        )
-      ],
+  buildlLoginCard() {
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  accountId = value;
+                  checkNearAccountId(accountId);
+                });
+              },
+              decoration: const InputDecoration(
+                  labelText: "NEAR account to connect with"),
+            ),
+          ),
+          invalidAccountId
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    "Invalid near account ID (e.g. nearflutter.testnet)",
+                    style: TextStyle(
+                        color: Colors.redAccent,
+                        backgroundColor: Colors.amberAccent),
+                  ),
+                )
+              : Container(),
+          isConnectWalletDisabled
+              ? ElevatedButton(
+                  onPressed: null,
+                  style: ElevatedButton.styleFrom(primary: Colors.grey),
+                  child: const Text("Connect Wallet"))
+              : ElevatedButton(
+                  onPressed: () {
+                    connectWallet(accountId);
+                  },
+                  child: const Text("Connect Wallet"))
+        ],
+      ),
+    );
+  }
+
+  buildLoginFailedPage() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Good Faith"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            buildlLoginCard(),
+            const Text(
+              "Wallet connection failed, please try again",
+              style: TextStyle(
+                  color: Colors.redAccent, backgroundColor: Colors.amberAccent),
+            )
+          ],
+        ),
+      ),
     );
   }
 
