@@ -59,7 +59,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
             padding: const EdgeInsets.all(20),
             child: Column(children: [
               const Text(
-                "Borrow Request",
+                "Create Request",
                 style: Constants.HEADING_1,
               ),
               const SizedBox(
@@ -151,12 +151,11 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                 children: [
                   Expanded(
                     child: isCreateButtonDisabled
-                        ? ElevatedButton(
-                            onPressed: null,
-                            style:
-                                ElevatedButton.styleFrom(primary: Colors.grey),
-                            child: const Text("Create Request"))
+                        ? const ElevatedButton(
+                            onPressed: null, child: Text("Create Request"))
                         : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.deepOrange),
                             onPressed: () {
                               Request request = Request(
                                   amount:
