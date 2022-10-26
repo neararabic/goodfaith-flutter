@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:good_faith/constants.dart';
 import 'package:good_faith/models/request.dart';
 import 'package:good_faith/providers/lend_list_page_provider.dart';
@@ -21,19 +20,36 @@ class LendListPage extends StatefulWidget {
 
 class _LendListPageState extends State<LendListPage>
     with WidgetsBindingObserver {
+  late BuildContext buildContext;
   late LendListProvider provider;
+  Request? requestToBeConfiremed;
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<LendListProvider>(context);
     switch (provider.state) {
-      case LendListState.loadingList:
+      case LendListState.loading:
         provider.loadListData(
-            userAccountId: widget.userAccountId, keyPair: widget.keyPair);
+            userAccountId: widget.userAccountId,
+            keyPair: widget.keyPair,
+            fullfilledRequest: requestToBeConfiremed);
         return const CenteredCircularProgressIndicator();
       case LendListState.loaded:
+        showTransactionMessage(context);
         return buildLendListPage();
     }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   buildLendListPage() {
@@ -56,11 +72,14 @@ class _LendListPageState extends State<LendListPage>
                 itemCount: provider.requests.length,
                 itemBuilder: (context, index) {
                   Request request = provider.requests[index];
+                  String requestAmountInNear =
+                      yoctoToNear(request.amount.toString());
                   if ((request.lender == '' ||
                           request.lender == widget.userAccountId) &&
                       request.borrower != widget.userAccountId) {
                     return ListTile(
                       contentPadding: const EdgeInsets.all(0),
+                      minVerticalPadding: 15,
                       horizontalTitleGap: 0,
                       minLeadingWidth: 0,
                       leading: request.lender == widget.userAccountId
@@ -71,14 +90,18 @@ class _LendListPageState extends State<LendListPage>
                           : const SizedBox(
                               width: 15,
                             ),
-                      title: Text(
-                          '${request.borrower} - ${yoctoToNear(request.amount.toString())}Ⓝ'),
+                      title:
+                          Text('${request.borrower} - $requestAmountInNearⓃ'),
                       subtitle: Text(
                           '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
                       trailing: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: Colors.deepOrange),
-                        onPressed: () {},
+                        onPressed: () {
+                          requestToBeConfiremed = request;
+                          provider.lend(widget.keyPair, widget.userAccountId,
+                              request, double.parse(requestAmountInNear));
+                        },
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Lend'),
@@ -108,6 +131,22 @@ class _LendListPageState extends State<LendListPage>
     }
   }
 
+  //this is to reload requests when coming back from signing
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    //detect when app opens back after connecting to te wallet
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (provider.state == LendListState.loaded) {
+          provider.updateState(LendListState.loading);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   showTransactionMessage(BuildContext context) async {
     final snackBar = SnackBar(
       duration: const Duration(seconds: 3),
@@ -125,6 +164,7 @@ class _LendListPageState extends State<LendListPage>
       await Future.delayed(const Duration(seconds: 1), (() {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }));
+      provider.transactionMessage = '';
     }
   }
 }

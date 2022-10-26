@@ -181,6 +181,15 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
     );
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    borrowAmountController.dispose();
+    descController.dispose();
+    accountIdController.dispose();
+    super.dispose();
+  }
+
   checkNearAccountId(accountId) {
     RegExp regExp = RegExp(
       r"^\w+(?:\.\w+)*\.testnet$",

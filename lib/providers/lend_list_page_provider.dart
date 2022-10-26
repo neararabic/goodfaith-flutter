@@ -1,22 +1,28 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:good_faith/local_storage.dart';
 import 'package:good_faith/models/request.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../near/near_api_calls.dart';
 
-enum LendListState { loadingList, loaded }
+enum LendListState { loading, loaded }
 
 class LendListProvider with ChangeNotifier {
-  LendListState state = LendListState.loadingList;
+  LendListState state = LendListState.loading;
   String transactionMessage = "";
   List<Request> requests = [];
 
   Future<void> loadListData(
-      {required KeyPair keyPair, required String userAccountId}) async {
+      {required KeyPair keyPair,
+      required String userAccountId,
+      Request? fullfilledRequest}) async {
     String method = 'getUnfulfilledRequests';
     String args = '{}';
     dynamic response;
+
+    if (fullfilledRequest != null) {
+      // Delay 1 second to make sure transactions finalized before getting updated data
+      await Future.delayed(const Duration(seconds: 1));
+    }
     try {
       response = await NEARApi()
           .callViewFunction(userAccountId, keyPair, method, args);
@@ -24,10 +30,25 @@ class LendListProvider with ChangeNotifier {
       requests = (json.decode(result) as List)
           .map((e) => Request.fromJson(e))
           .toList();
+      if (fullfilledRequest != null) {
+        if (requests.contains(fullfilledRequest)) {
+          transactionMessage =
+              "Something went wrong!\nplease make sure you follow the wallet and approve the transaction.";
+        } else {
+          transactionMessage = "Thank you for helping someone in need";
+        }
+      }
     } catch (e) {
       transactionMessage = " RPC Error! Please try again later. ";
     }
     updateState(LendListState.loaded);
+  }
+
+  lend(KeyPair keyPair, String userAccountId, Request fullfilledRequest,
+      double deposit) async {
+    String method = 'lend';
+    String args = '{"requestId":"${fullfilledRequest.id}"}';
+    await NEARApi().callFunction(userAccountId, keyPair, deposit, method, args);
   }
 
   //update and notify ui state
