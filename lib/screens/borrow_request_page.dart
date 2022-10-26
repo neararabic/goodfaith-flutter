@@ -150,30 +150,28 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
               Row(
                 children: [
                   Expanded(
-                    child: isCreateButtonDisabled
-                        ? const ElevatedButton(
-                            onPressed: null, child: Text("Create Request"))
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.deepOrange),
-                            onPressed: () {
-                              Request request = Request(
-                                  amount:
-                                      nearToYocto(borrowAmountController.text),
-                                  desc: descController.text,
-                                  borrower: widget.userAccountId,
-                                  lender: isPersonal
-                                      ? accountIdController.text
-                                      : '',
-                                  paybackTimestamp: BigInt.parse(paybackDate
-                                          .microsecondsSinceEpoch
-                                          .toString()) *
-                                      BigInt.from(1000));
-                              provider.createRequest(widget.keyPair,
-                                  widget.userAccountId, request);
-                            },
-                            child: const Text("Create Request")),
-                  )
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.deepOrange),
+                          onPressed: isCreateButtonDisabled
+                              ? null
+                              : () {
+                                  Request request = Request(
+                                      amount: nearToYocto(
+                                          borrowAmountController.text),
+                                      desc: descController.text,
+                                      borrower: widget.userAccountId,
+                                      lender: isPersonal
+                                          ? accountIdController.text
+                                          : '',
+                                      paybackTimestamp: BigInt.parse(paybackDate
+                                              .microsecondsSinceEpoch
+                                              .toString()) *
+                                          BigInt.from(1000));
+                                  provider.createRequest(widget.keyPair,
+                                      widget.userAccountId, request);
+                                },
+                          child: const Text("Create Request")))
                 ],
               )
             ]),
