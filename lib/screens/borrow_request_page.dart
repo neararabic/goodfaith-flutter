@@ -30,7 +30,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
   DateTime now = DateTime.now();
   late DateTime paybackDate = DateTime(now.year, now.month, now.day + 1);
   bool isPersonal = false;
-  bool invalidAccountId = false;
+  bool invalidAccountId = true;
   bool isCreateButtonDisabled = true;
 
   @override
@@ -134,16 +134,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                   }
                 },
               ),
-              isPersonal
-                  ? TextField(
-                      controller: accountIdController,
-                      onChanged: (value) {
-                        changeCreateButtonState();
-                      },
-                      decoration: const InputDecoration(
-                          labelText: "Account ID", alignLabelWithHint: true),
-                    )
-                  : Container(),
+              buildAccountIdTextField(),
               const SizedBox(
                 height: 20,
               ),
@@ -181,6 +172,40 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
     );
   }
 
+  buildAccountIdTextField() {
+    return Column(
+      children: [
+        isPersonal
+            ? Column(
+                children: [
+                  TextField(
+                    controller: accountIdController,
+                    onChanged: (value) {
+                      checkNearAccountId(value);
+                      changeCreateButtonState();
+                    },
+                    decoration: const InputDecoration(
+                        labelText: "Account ID", alignLabelWithHint: true),
+                  ),
+                  invalidAccountId
+                      ? const Card(
+                          color: Colors.amberAccent,
+                          child: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text(
+                              "Invalid near account ID (e.g. nearflutter.testnet)",
+                              style: TextStyle(color: Colors.blueGrey),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              )
+            : Container(),
+      ],
+    );
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -196,13 +221,13 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
       caseSensitive: true,
       multiLine: false,
     );
-    if (regExp.allMatches(accountId).isNotEmpty) {
-      invalidAccountId = false;
-      isCreateButtonDisabled = false;
-    } else {
-      invalidAccountId = true;
-      isCreateButtonDisabled = true;
-    }
+    setState(() {
+      if (regExp.allMatches(accountId).isNotEmpty) {
+        invalidAccountId = false;
+      } else {
+        invalidAccountId = true;
+      }
+    });
   }
 
   BigInt nearToYocto(String amount) {
@@ -263,7 +288,8 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
       if (isPersonal) {
         if (borrowAmountController.text.isNotEmpty &&
             descController.text.isNotEmpty &&
-            accountIdController.text.isNotEmpty) {
+            accountIdController.text.isNotEmpty &&
+            !invalidAccountId) {
           isCreateButtonDisabled = false;
         } else {
           isCreateButtonDisabled = true;

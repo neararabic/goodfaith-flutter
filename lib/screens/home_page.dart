@@ -54,12 +54,12 @@ class _GoodFaithPageState extends State<GoodFaithPage>
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.call_received),
-            label: 'Borrow',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.send),
             label: 'Lend',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.call_received),
+            label: 'Borrow',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.request_quote),

@@ -37,7 +37,6 @@ dependencies:
   near_api_flutter: ^0.0.13-alpha
   shared_preferences: ^2.0.15
   provider: ^6.0.3
-  primitive: ^1.0.1
 
 dev_dependencies:
   flutter_test:
