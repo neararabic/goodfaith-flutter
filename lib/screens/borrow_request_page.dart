@@ -188,13 +188,15 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                         labelText: "Account ID", alignLabelWithHint: true),
                   ),
                   invalidAccountId
-                      ? const Card(
+                      ? Card(
                           color: Colors.amberAccent,
                           child: Padding(
-                            padding: EdgeInsets.all(5.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              "Invalid near account ID (e.g. nearflutter.testnet)",
-                              style: TextStyle(color: Colors.blueGrey),
+                              accountIdController.text == widget.userAccountId
+                                  ? "You cannot request to borrow from yourself!"
+                                  : "Invalid near account ID (e.g. nearflutter.testnet)",
+                              style: const TextStyle(color: Colors.blueGrey),
                             ),
                           ),
                         )
@@ -222,7 +224,8 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
       multiLine: false,
     );
     setState(() {
-      if (regExp.allMatches(accountId).isNotEmpty) {
+      if (regExp.allMatches(accountId).isNotEmpty &&
+          accountId != widget.userAccountId) {
         invalidAccountId = false;
       } else {
         invalidAccountId = true;
