@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # lend_me
 
 A new Flutter project.
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# Lend Me
+A mobile app that lets people send borrow-money requests on the NEAR Blockchain.
+>>>>>>> cc403c0f063db5497c3182bfc21c9ee5c6dc945c
