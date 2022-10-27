@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:good_faith/models/request.dart';
+import 'package:lend_me/models/request.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../near/near_api_calls.dart';
 

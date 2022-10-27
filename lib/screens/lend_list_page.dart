@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/constants.dart';
-import 'package:good_faith/models/request.dart';
-import 'package:good_faith/providers/lend_list_page_provider.dart';
-import 'package:good_faith/widgets/centered_progress_indicator.dart';
+import 'package:lend_me/constants.dart';
+import 'package:lend_me/models/request.dart';
+import 'package:lend_me/providers/lend_list_page_provider.dart';
+import 'package:lend_me/widgets/centered_progress_indicator.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class _LendListPageState extends State<LendListPage>
   final List<bool> selectedFilters = <bool>[true, false];
   final List<Widget> filters = const [
     Text('All'),
-    Text('Personal'),
+    Text('From me'),
   ];
 
   @override

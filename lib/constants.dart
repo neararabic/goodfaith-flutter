@@ -15,7 +15,7 @@ class Constants {
       'https://near-transaction-serializer.herokuapp.com/success';
   static const String WEB_FAILURE_URL =
       'https://near-transaction-serializer.herokuapp.com/failure';
-  static const APP_TITLE = 'Good faith';
+  static const APP_TITLE = 'Lend Me';
   static const DEFAULT_GAS_FEES = 30000000000000;
 
   static const REQUEST_CREATED_MSG = "Request created successfully!";

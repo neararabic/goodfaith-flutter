@@ -1,4 +1,4 @@
-# good_faith
+# lend_me
 
 A new Flutter project.
 

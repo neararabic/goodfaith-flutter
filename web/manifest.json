@@ -1,6 +1,6 @@
 {
-    "name": "good_faith",
-    "short_name": "good_faith",
+    "name": "lend_me",
+    "short_name": "lend_me",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

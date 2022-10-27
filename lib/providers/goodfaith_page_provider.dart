@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/local_storage.dart';
-import 'package:good_faith/providers/connect_wallet_provider.dart';
+import 'package:lend_me/local_storage.dart';
+import 'package:lend_me/providers/connect_wallet_provider.dart';
 
 enum GoodFaithPageState { loggedIn, loggedout }
 

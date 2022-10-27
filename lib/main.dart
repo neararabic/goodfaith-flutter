@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/providers/borrow_request_page_provider.dart';
-import 'package:good_faith/providers/goodfaith_page_provider.dart';
-import 'package:good_faith/providers/connect_wallet_provider.dart';
-import 'package:good_faith/providers/lend_list_page_provider.dart';
-import 'package:good_faith/screens/connect_wallet.dart';
-import 'package:good_faith/screens/goodfaith_home_page.dart';
-import 'package:good_faith/widgets/centered_progress_indicator_with_app_bar.dart';
+import 'package:lend_me/providers/borrow_request_page_provider.dart';
+import 'package:lend_me/providers/goodfaith_page_provider.dart';
+import 'package:lend_me/providers/connect_wallet_provider.dart';
+import 'package:lend_me/providers/lend_list_page_provider.dart';
+import 'package:lend_me/screens/connect_wallet.dart';
+import 'package:lend_me/screens/home_page.dart';
+import 'package:lend_me/widgets/centered_progress_indicator_with_app_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Good Faith',
+        title: 'Lend Me',
         theme: ThemeData(primarySwatch: Colors.blueGrey),
         home: MultiProvider(
           providers: [

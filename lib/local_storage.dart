@@ -1,4 +1,4 @@
-import 'package:good_faith/constants.dart';
+import 'package:lend_me/constants.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

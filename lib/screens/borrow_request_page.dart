@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:good_faith/constants.dart';
-import 'package:good_faith/models/request.dart';
-import 'package:good_faith/providers/borrow_request_page_provider.dart';
-import 'package:good_faith/widgets/centered_progress_indicator.dart';
+import 'package:lend_me/constants.dart';
+import 'package:lend_me/models/request.dart';
+import 'package:lend_me/providers/borrow_request_page_provider.dart';
+import 'package:lend_me/widgets/centered_progress_indicator.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +59,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
             padding: const EdgeInsets.all(20),
             child: Column(children: [
               const Text(
-                "Create Request",
+                "Borrow Money",
                 style: Constants.HEADING_1,
               ),
               const SizedBox(
@@ -109,7 +109,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                 children: [
                   ElevatedButton(
                     onPressed: () => selectDate(context),
-                    child: const Text('Payback Date'),
+                    child: const Text('Set Payback Date'),
                   ),
                   Text("${paybackDate.toLocal()}".split(' ')[0]),
                 ],
@@ -119,7 +119,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
               ),
               CheckboxListTile(
                 title: const Text(
-                  "Personal",
+                  "From a specific person?",
                 ),
                 visualDensity: const VisualDensity(
                     horizontal: VisualDensity.minimumDensity,
@@ -171,7 +171,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
                                   provider.createRequest(widget.keyPair,
                                       widget.userAccountId, request);
                                 },
-                          child: const Text("Create Request")))
+                          child: const Text("Request to borrow")))
                 ],
               )
             ]),

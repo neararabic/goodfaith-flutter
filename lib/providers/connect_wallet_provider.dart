@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/providers/goodfaith_page_provider.dart';
+import 'package:lend_me/providers/goodfaith_page_provider.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../local_storage.dart';
 import '../near/near_api_calls.dart';

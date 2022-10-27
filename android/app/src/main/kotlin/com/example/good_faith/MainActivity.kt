@@ -1,4 +1,4 @@
-package com.example.good_faith
+package com.example.lend_me
 
 import io.flutter.embedding.android.FlutterActivity
 

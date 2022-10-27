@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/constants.dart';
-import 'package:good_faith/providers/connect_wallet_provider.dart';
-import 'package:good_faith/screens/goodfaith_home_page.dart';
-import 'package:good_faith/widgets/centered_progress_indicator_with_app_bar.dart';
+import 'package:lend_me/constants.dart';
+import 'package:lend_me/providers/connect_wallet_provider.dart';
+import 'package:lend_me/screens/home_page.dart';
+import 'package:lend_me/widgets/centered_progress_indicator_with_app_bar.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -52,20 +52,24 @@ class _ConnectWalletScreenState extends State<ConnectWalletScreen>
   buildLoginPage() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Good Faith"),
+        title: const Text("Lend Me"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: buildlLoginCard(),
+        child: buildLoginCard(),
       ),
     );
   }
 
-  buildlLoginCard() {
+  buildLoginCard() {
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Lend Me app helps you borrow and lend  on NEAR"),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -108,13 +112,13 @@ class _ConnectWalletScreenState extends State<ConnectWalletScreen>
   buildLoginFailedPage() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Good Faith"),
+        title: const Text("Lend Me"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            buildlLoginCard(),
+            buildLoginCard(),
             const Text(
               "Wallet connection failed, please try again",
               style: TextStyle(

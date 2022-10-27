@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:good_faith/providers/goodfaith_page_provider.dart';
-import 'package:good_faith/screens/borrow_request_page.dart';
-import 'package:good_faith/screens/lend_list_page.dart';
+import 'package:lend_me/providers/goodfaith_page_provider.dart';
+import 'package:lend_me/screens/borrow_request_page.dart';
+import 'package:lend_me/screens/lend_list_page.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +39,7 @@ class _GoodFaithPageState extends State<GoodFaithPage>
   buildCoinflipPage() {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Good Faith - ${widget.userAccountId}"),
+        title: Text("Lend Me - ${widget.userAccountId}"),
         backgroundColor: Colors.blueGrey,
         actions: [
           IconButton(
@@ -54,13 +54,17 @@ class _GoodFaithPageState extends State<GoodFaithPage>
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(Icons.call_received),
+            label: 'Borrow',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.send),
             label: 'Lend',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.request_quote),
-            label: 'Request',
-          ),
+            label: 'Debts',
+          )
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.deepOrange,

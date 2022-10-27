@@ -8,7 +8,7 @@ class CenteredCircularProgressIndicatorWithAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Good Faith")),
+      appBar: AppBar(title: const Text("Lend Me")),
       body: const Center(
         child: CircularProgressIndicator(),
       ),
