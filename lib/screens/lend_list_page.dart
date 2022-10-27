@@ -109,7 +109,7 @@ class _LendListPageState extends State<LendListPage>
                         Request request = provider.requests[index];
                         String requestAmountInNear =
                             yoctoToNear(request.amount.toString());
-                        if (selectedFilters[0] ||
+                        if (selectedFilters[0] && request.lender == '' ||
                             (request.lender == widget.userAccountId &&
                                 selectedFilters[1]) ||
                             (request.borrower == widget.userAccountId &&
