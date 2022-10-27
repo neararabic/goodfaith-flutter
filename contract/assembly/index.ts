@@ -7,6 +7,7 @@ export class Contract {
   requests: PersistentMap<string, Request> = new PersistentMap<string, Request>("requests");
   unfulfilledRequestIds: PersistentSet<string> = new PersistentSet<string>("unfulfilledRequestIds");
   fulfilledRequestIds: PersistentSet<string> = new PersistentSet<string>("fulfilledRequestIds");
+  payedbackRequestIds: PersistentSet<string> = new PersistentSet<string>("payedbackRequestIds");
 
   @mutateState()
   postBorrowRequest(request: Request): Request {
@@ -23,9 +24,21 @@ export class Contract {
   lend(requestId: string): Request {
     var request: Request = this.requests.getSome(requestId);
     assert(context.attachedDeposit == request.amount, "Attached deposit not equal to request amount!");
+    request.lender = context.predecessor;
+    this.requests.set(requestId, request);
     ContractPromiseBatch.create(request.borrower).transfer(request.amount);
     this.unfulfilledRequestIds.delete(request.id);
     this.fulfilledRequestIds.add(request.id);
+    return request;
+  }
+
+  @mutateState()
+  payback(requestId: string): Request {
+    var request: Request = this.requests.getSome(requestId);
+    assert(context.attachedDeposit == request.amount, "Attached deposit not equal to request amount!");
+    ContractPromiseBatch.create(request.lender).transfer(request.amount);
+    this.fulfilledRequestIds.delete(request.id);
+    this.payedbackRequestIds.add(request.id);
     return request;
   }
 
@@ -38,7 +51,7 @@ export class Contract {
     return requests;
   }
 
-  getAccountRequests(accountId: string): Array<Request> {
+  getAccountFulfilledRequests(accountId: string): Array<Request> {
     var requests: Array<Request> = new Array<Request>();
     var fulfilledRequestIds: string[] = this.fulfilledRequestIds.values();
     for (let i = 0; i < fulfilledRequestIds.length; i++) {

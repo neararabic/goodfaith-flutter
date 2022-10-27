@@ -277,6 +277,7 @@ class _BorrowRequestPageState extends State<BorrowRequestPage>
         descController.text = '';
         accountIdController.text = '';
         isPersonal = false;
+        isCreateButtonDisabled = true;
         paybackDate = DateTime(now.year, now.month, now.day + 1);
       }
       provider.transactionMessage = '';
