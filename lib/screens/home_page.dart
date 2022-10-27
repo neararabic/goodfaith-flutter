@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lend_me/providers/goodfaith_page_provider.dart';
 import 'package:lend_me/screens/borrow_request_page.dart';
+import 'package:lend_me/screens/debit_page.dart';
 import 'package:lend_me/screens/lend_list_page.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,10 @@ class _GoodFaithPageState extends State<GoodFaithPage>
   late final List<Widget> _widgetOptions = <Widget>[
     LendListPage(keyPair: widget.keyPair, userAccountId: widget.userAccountId),
     BorrowRequestPage(
+      keyPair: widget.keyPair,
+      userAccountId: widget.userAccountId,
+    ),
+    DebitPage(
       keyPair: widget.keyPair,
       userAccountId: widget.userAccountId,
     )
@@ -63,7 +68,7 @@ class _GoodFaithPageState extends State<GoodFaithPage>
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.request_quote),
-            label: 'Debts',
+            label: 'Debit',
           )
         ],
         currentIndex: _selectedIndex,

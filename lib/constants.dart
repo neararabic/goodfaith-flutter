@@ -10,7 +10,7 @@ class Constants {
       'https://wallet.testnet.near.org/login/?';
   static const String WALLET_SIGN_URL =
       'https://wallet.testnet.near.org/sign/?';
-  static const String CONTRACT_ID = 'goodfaith.testnet';
+  static const String CONTRACT_ID = 'lendme.testnet';
   static const String WEB_SUCCESS_URL =
       'https://near-transaction-serializer.herokuapp.com/success';
   static const String WEB_FAILURE_URL =
