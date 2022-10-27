@@ -31,11 +31,13 @@ class DebitPageProvider with ChangeNotifier {
           .map((e) => Request.fromJson(e))
           .toList();
       if (payedbackRequest != null) {
-        if (requests.contains(payedbackRequest)) {
-          transactionMessage =
-              "Something went wrong!\nplease make sure you follow the wallet and approve the transaction.";
-        } else {
-          transactionMessage = "Thank you for keeping your end of the deal";
+        transactionMessage = "Thank you for keeping your end of the deal";
+        for (var request in requests) {
+          if (request == payedbackRequest) {
+            transactionMessage =
+                "Something went wrong!\nplease make sure you follow the wallet and approve the transaction.";
+            break;
+          }
         }
       }
     } catch (e) {

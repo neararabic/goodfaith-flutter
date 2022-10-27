@@ -31,11 +31,13 @@ class LendListProvider with ChangeNotifier {
           .map((e) => Request.fromJson(e))
           .toList();
       if (fullfilledRequest != null) {
-        if (requests.contains(fullfilledRequest)) {
-          transactionMessage =
-              "Something went wrong!\nplease make sure you follow the wallet and approve the transaction.";
-        } else {
-          transactionMessage = "Thank you for helping someone in need";
+        transactionMessage = "Thank you for helping someone in need";
+        for (var request in requests) {
+          if (request == fullfilledRequest) {
+            transactionMessage =
+                "Something went wrong!\nplease make sure you follow the wallet and approve the transaction.";
+            break;
+          }
         }
       }
     } catch (e) {

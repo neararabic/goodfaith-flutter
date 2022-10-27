@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class Request {
   String id = '';
   String borrower = '';
@@ -21,4 +23,11 @@ class Request {
     paybackTimestamp = BigInt.parse(json['paybackTimestamp']);
     amount = BigInt.parse(json['amount']);
   }
+
+  @override
+  bool operator ==(other) => other is Request && id == other.id;
+
+  @override
+  int get hashCode =>
+      hashValues(id, borrower, lender, desc, paybackTimestamp, amount);
 }

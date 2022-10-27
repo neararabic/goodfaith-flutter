@@ -27,10 +27,12 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
     Text('All'),
     Text('Owed'),
   ];
+  BigInt totalDebit = BigInt.zero;
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<DebitPageProvider>(context);
+    calculateTotalDebit();
     switch (provider.state) {
       case DebitPageState.loading:
         provider.loadListData(
@@ -72,7 +74,7 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      "Depit",
+                      "Debit",
                       style: Constants.HEADING_1,
                     ),
                     const SizedBox(
@@ -82,6 +84,7 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                       direction: Axis.horizontal,
                       onPressed: (int index) {
                         setState(() {
+                          totalDebit = BigInt.zero;
                           // The button that is tapped is set to true, and the others to false.
                           for (int i = 0; i < selectedFilters.length; i++) {
                             selectedFilters[i] = i == index;
@@ -124,10 +127,10 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                                     width: 15,
                                   ),
                             title: Text(
-                                '${request.lender} - $requestAmountInNearⓃ'),
+                                '${request.lender == widget.userAccountId ? request.borrower : request.lender} - $requestAmountInNearⓃ'),
                             subtitle: Text(
                                 '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
-                            trailing: (request.lender == widget.userAccountId)
+                            trailing: (request.lender != widget.userAccountId)
                                 ? ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.deepOrange),
@@ -141,7 +144,7 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                                     },
                                     child: const Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Text('Lend'),
+                                      child: Text('Payback'),
                                     ),
                                   )
                                 : Container(
@@ -153,6 +156,20 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                           return Container();
                         }
                       },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Divider(
+                      color: Colors.blueGrey,
+                      thickness: 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text("Total Debit: "),
+                        Text(yoctoToNear(totalDebit.toString()))
+                      ],
                     )
                   ]),
             ),
@@ -169,6 +186,24 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
       double parsed = double.parse(yocto);
       double oneNear = 1000000000000000000000000.0;
       return (parsed / oneNear).toStringAsFixed(3);
+    }
+  }
+
+  calculateTotalDebit() {
+    totalDebit = BigInt.zero;
+    if (provider.requests.isNotEmpty) {
+      for (var request in provider.requests) {
+        if (selectedFilters[0] ||
+            selectedFilters[1] && request.borrower == widget.userAccountId) {
+          setState(() {
+            if (request.lender == widget.userAccountId) {
+              totalDebit += request.amount;
+            } else {
+              totalDebit -= request.amount;
+            }
+          });
+        }
+      }
     }
   }
 
