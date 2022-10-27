@@ -23,10 +23,11 @@ class _LendListPageState extends State<LendListPage>
   late BuildContext buildContext;
   late LendListProvider provider;
   Request? requestToBeConfiremed;
-  final List<bool> selectedFilters = <bool>[true, false];
+  final List<bool> selectedFilters = <bool>[true, false, false];
   final List<Widget> filters = const [
     Text('All'),
-    Text('From me'),
+    Text('For Me'),
+    Text('Mine'),
   ];
 
   @override
@@ -108,9 +109,11 @@ class _LendListPageState extends State<LendListPage>
                         Request request = provider.requests[index];
                         String requestAmountInNear =
                             yoctoToNear(request.amount.toString());
-                        if ((((request.lender == '' && selectedFilters[0]) ||
-                                request.lender == widget.userAccountId) &&
-                            request.borrower != widget.userAccountId)) {
+                        if (selectedFilters[0] ||
+                            (request.lender == widget.userAccountId &&
+                                selectedFilters[1]) ||
+                            (request.borrower == widget.userAccountId &&
+                                selectedFilters[2])) {
                           return ListTile(
                             contentPadding: const EdgeInsets.all(0),
                             minVerticalPadding: 15,
@@ -127,23 +130,27 @@ class _LendListPageState extends State<LendListPage>
                             title: Text(
                                 '${request.borrower} - $requestAmountInNearⓃ'),
                             subtitle: Text(
-                                '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
-                            trailing: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.deepOrange),
-                              onPressed: () {
-                                requestToBeConfiremed = request;
-                                provider.lend(
-                                    widget.keyPair,
-                                    widget.userAccountId,
-                                    request,
-                                    double.parse(requestAmountInNear));
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text('Lend'),
-                              ),
-                            ),
+                                '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt()).toString().substring(0, 16)} ${request.lender}'),
+                            trailing: request.borrower != widget.userAccountId
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.deepOrange),
+                                    onPressed: () {
+                                      requestToBeConfiremed = request;
+                                      provider.lend(
+                                          widget.keyPair,
+                                          widget.userAccountId,
+                                          request,
+                                          double.parse(requestAmountInNear));
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text('Lend'),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 20,
+                                  ),
                             isThreeLine: true,
                           );
                         } else {
