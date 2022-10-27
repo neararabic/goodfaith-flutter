@@ -113,12 +113,16 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                         if (selectedFilters[0] ||
                             selectedFilters[1] &&
                                 request.borrower == widget.userAccountId) {
+                          String headingAccountId =
+                              request.lender == widget.userAccountId
+                                  ? request.borrower
+                                  : request.lender;
                           return ListTile(
                             contentPadding: const EdgeInsets.all(0),
                             minVerticalPadding: 15,
                             horizontalTitleGap: 0,
                             minLeadingWidth: 0,
-                            leading: request.lender == widget.userAccountId
+                            leading: request.lender != widget.userAccountId
                                 ? const VerticalDivider(
                                     color: Colors.deepOrange,
                                     thickness: 3,
@@ -127,9 +131,9 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                                     width: 15,
                                   ),
                             title: Text(
-                                '${request.lender == widget.userAccountId ? request.borrower : request.lender} - $requestAmountInNearⓃ'),
+                                '$headingAccountId - $requestAmountInNearⓃ'),
                             subtitle: Text(
-                                '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt())}'),
+                                '${request.desc}\n${DateTime.fromMicrosecondsSinceEpoch((request.paybackTimestamp ~/ BigInt.from(1000)).toInt()).toString().substring(0, 16)}'),
                             trailing: (request.lender != widget.userAccountId)
                                 ? ElevatedButton(
                                     style: ElevatedButton.styleFrom(
