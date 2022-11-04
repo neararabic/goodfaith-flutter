@@ -4,10 +4,10 @@ import 'package:lend_me/models/request.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import '../near/near_api_calls.dart';
 
-enum DebitPageState { loading, loaded }
+enum LedgerPageState { loading, loaded }
 
-class DebitPageProvider with ChangeNotifier {
-  DebitPageState state = DebitPageState.loading;
+class LedgerPageProvider with ChangeNotifier {
+  LedgerPageState state = LedgerPageState.loading;
   String transactionMessage = "";
   List<Request> requests = [];
 
@@ -43,7 +43,7 @@ class DebitPageProvider with ChangeNotifier {
     } catch (e) {
       transactionMessage = " RPC Error! Please try again later. ";
     }
-    updateState(DebitPageState.loaded);
+    updateState(LedgerPageState.loaded);
   }
 
   payback(KeyPair keyPair, String userAccountId, Request fullfilledRequest,
@@ -54,17 +54,17 @@ class DebitPageProvider with ChangeNotifier {
   }
 
   //update and notify ui state
-  void updateState(DebitPageState state) {
+  void updateState(LedgerPageState state) {
     this.state = state;
     notifyListeners();
   }
 
   //singleton
-  static final DebitPageProvider _singleton = DebitPageProvider._internal();
+  static final LedgerPageProvider _singleton = LedgerPageProvider._internal();
 
-  factory DebitPageProvider() {
+  factory LedgerPageProvider() {
     return _singleton;
   }
 
-  DebitPageProvider._internal();
+  LedgerPageProvider._internal();
 }

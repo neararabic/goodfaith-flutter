@@ -1,46 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:lend_me/constants.dart';
 import 'package:lend_me/models/request.dart';
-import 'package:lend_me/providers/debit_page_provider.dart';
+import 'package:lend_me/providers/ledger_page_provider.dart';
 import 'package:lend_me/widgets/centered_progress_indicator.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
 
-class DebitPage extends StatefulWidget {
+class LedgerPage extends StatefulWidget {
   final KeyPair keyPair;
   final String userAccountId;
 
-  const DebitPage(
+  const LedgerPage(
       {Key? key, required this.keyPair, required this.userAccountId})
       : super(key: key);
 
   @override
-  State<DebitPage> createState() => _DebitPageState();
+  State<LedgerPage> createState() => _LedgerPageState();
 }
 
-class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
+class _LedgerPageState extends State<LedgerPage> with WidgetsBindingObserver {
   late BuildContext buildContext;
-  late DebitPageProvider provider;
+  late LedgerPageProvider provider;
   Request? requestToBePayedback;
-  final List<bool> selectedFilters = <bool>[true, false];
+  final List<bool> selectedFilters = <bool>[true, false, false];
   final List<Widget> filters = const [
+    Text('Borrows'),
+    Text('Lends'),
     Text('All'),
-    Text('Owed'),
   ];
   BigInt totalDebit = BigInt.zero;
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<DebitPageProvider>(context);
+    provider = Provider.of<LedgerPageProvider>(context);
     calculateTotalDebit();
     switch (provider.state) {
-      case DebitPageState.loading:
+      case LedgerPageState.loading:
         provider.loadListData(
             userAccountId: widget.userAccountId,
             keyPair: widget.keyPair,
             payedbackRequest: requestToBePayedback);
         return const CenteredCircularProgressIndicator();
-      case DebitPageState.loaded:
+      case LedgerPageState.loaded:
         showTransactionMessage(context);
         return buildDebitPage();
     }
@@ -61,7 +62,7 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
   buildDebitPage() {
     return RefreshIndicator(
       onRefresh: () async {
-        provider.updateState(DebitPageState.loading);
+        provider.updateState(LedgerPageState.loading);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -110,9 +111,11 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
                         Request request = provider.requests[index];
                         String requestAmountInNear =
                             yoctoToNear(request.amount.toString());
-                        if (selectedFilters[0] ||
-                            selectedFilters[1] &&
-                                request.borrower == widget.userAccountId) {
+                        if ((selectedFilters[0] &&
+                                request.borrower == widget.userAccountId) ||
+                            (selectedFilters[1] &&
+                                request.lender == widget.userAccountId) ||
+                            (selectedFilters[2])) {
                           String headingAccountId =
                               request.lender == widget.userAccountId
                                   ? request.borrower
@@ -197,8 +200,9 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
     totalDebit = BigInt.zero;
     if (provider.requests.isNotEmpty) {
       for (var request in provider.requests) {
-        if (selectedFilters[0] ||
-            selectedFilters[1] && request.borrower == widget.userAccountId) {
+        if ((selectedFilters[0] && request.borrower == widget.userAccountId) ||
+            (selectedFilters[1] && request.lender == widget.userAccountId) ||
+            (selectedFilters[2])) {
           setState(() {
             if (request.lender == widget.userAccountId) {
               totalDebit += request.amount;
@@ -218,8 +222,8 @@ class _DebitPageState extends State<DebitPage> with WidgetsBindingObserver {
     //detect when app opens back after connecting to te wallet
     switch (state) {
       case AppLifecycleState.resumed:
-        if (provider.state == DebitPageState.loaded) {
-          provider.updateState(DebitPageState.loading);
+        if (provider.state == LedgerPageState.loaded) {
+          provider.updateState(LedgerPageState.loading);
         }
         break;
       default:

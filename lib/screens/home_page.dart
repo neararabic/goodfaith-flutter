@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lend_me/providers/goodfaith_page_provider.dart';
 import 'package:lend_me/screens/borrow_request_page.dart';
-import 'package:lend_me/screens/debit_page.dart';
+import 'package:lend_me/screens/Ledger_page.dart';
 import 'package:lend_me/screens/lend_list_page.dart';
 import 'package:near_api_flutter/near_api_flutter.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class _GoodFaithPageState extends State<GoodFaithPage>
       keyPair: widget.keyPair,
       userAccountId: widget.userAccountId,
     ),
-    DebitPage(
+    LedgerPage(
       keyPair: widget.keyPair,
       userAccountId: widget.userAccountId,
     )
@@ -68,7 +68,7 @@ class _GoodFaithPageState extends State<GoodFaithPage>
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.request_quote),
-            label: 'Debit',
+            label: 'Ledger',
           )
         ],
         currentIndex: _selectedIndex,

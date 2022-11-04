@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lend_me/providers/borrow_request_page_provider.dart';
-import 'package:lend_me/providers/debit_page_provider.dart';
+import 'package:lend_me/providers/ledger_page_provider.dart';
 import 'package:lend_me/providers/goodfaith_page_provider.dart';
 import 'package:lend_me/providers/connect_wallet_provider.dart';
 import 'package:lend_me/providers/lend_list_page_provider.dart';
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
                 create: (_) => LendListProvider()),
             ChangeNotifierProvider<BorrowRequestPageProvider>(
                 create: (_) => BorrowRequestPageProvider()),
-            ChangeNotifierProvider<DebitPageProvider>(
-                create: (_) => DebitPageProvider())
+            ChangeNotifierProvider<LedgerPageProvider>(
+                create: (_) => LedgerPageProvider())
           ],
           child: const AppContainer(),
         ));
