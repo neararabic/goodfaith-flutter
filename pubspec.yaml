@@ -1,4 +1,4 @@
-name: Lend Me
+name: lend_me
 description: borrow and lend money on NEAR.
 
 # The following line prevents the package from being accidentally published to
