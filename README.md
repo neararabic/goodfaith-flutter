@@ -8,6 +8,8 @@ Lend and borrow on NEAR using an easy to use mobile app build with Flutter that 
 
 ## Features
 ### Login using NEAR Wallet
+<img src="https://user-images.githubusercontent.com/34034904/202174781-68be7371-6332-4294-88e5-d39c38f03bc5.png" width="250">
+
 ![image](https://user-images.githubusercontent.com/34034904/202174781-68be7371-6332-4294-88e5-d39c38f03bc5.png)
 
 ### Create a borrow request
