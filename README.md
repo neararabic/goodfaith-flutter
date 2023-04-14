@@ -7,6 +7,13 @@ Lend and borrow on NEAR using an easy to use mobile app build with Flutter that 
 - [Smartcontract](https://github.com/neararabic/lend-me/tree/main/contract)
 
 ## Features
+
+| ### Login using NEAR Wallet  | ### Create a borrow request |
+| ------------- | ------------- |
+| <img src="https://user-images.githubusercontent.com/34034904/202174781-68be7371-6332-4294-88e5-d39c38f03bc5.png" width="250">  | <img src="https://user-images.githubusercontent.com/34034904/202176010-7a833996-5754-4f57-a180-6973d56d058a.png" width="250">  |
+| Content Cell  | Content Cell  |
+
+
 ### Login using NEAR Wallet
 <img src="https://user-images.githubusercontent.com/34034904/202174781-68be7371-6332-4294-88e5-d39c38f03bc5.png" width="250">
 
