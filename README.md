@@ -18,3 +18,10 @@ Lend and borrow on NEAR using an easy to use mobile app build with Flutter that 
 | <img src="https://user-images.githubusercontent.com/34034904/202176176-96b1081c-f7b7-4862-8ee4-eba50865063b.png" width="250"> | <img src="https://user-images.githubusercontent.com/34034904/202176472-1636e2e6-79cd-4266-8489-880a18a3e349.png" width="250">  | <img src="https://user-images.githubusercontent.com/34034904/202176764-58ec4074-ee58-49a8-b043-45538b7fec13.png" width="250"> |
 
 
+## Packages Used
+- cupertino_icons: ^1.0.2
+- near_api_flutter: ^0.0.13-alpha
+- shared_preferences: ^2.0.15
+- provider: ^6.0.3
+- flutter_launcher_icons: ^0.10.0
+
